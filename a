@@ -1,27 +1,55 @@
-local key = getgenv().Key or "Unknown"
-local id = getgenv().ID or "Unknown"
 
-local data = {
-    content = "**🔑 Key:** `" .. key .. "`\n**🆔 ID:** `" .. id .. "`",
-    username = "Script HWID Logger"
-}
+-- Dữ liệu hệ thống
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
-local jsonData = game:GetService("HttpService"):JSONEncode(data)
+local player = Players.LocalPlayer
+local hwid = RbxAnalyticsService:GetClientId()
 
--- Chỉ hoạt động nếu executor hỗ trợ syn.request hoặc http_request
-local success, err = pcall(function()
-    (syn and syn.request or http_request)({
-        Url = "https://discord.com/api/webhooks/1401602933996650577/_mlbJB3Uc_ooFbRkipQQ2B5lAUx8bVsuBkrkYvwh9B0T-2eu6ryuBRZ3HzxAS_LhskiM",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = jsonData
-    })
-end)
+-- Webhook của bạn
+local Webhook_URL = "https://discord.com/api/webhooks/1401602933996650577/_mlbJB3Uc_ooFbRkipQQ2B5lAUx8bVsuBkrkYvwh9B0T-2eu6ryuBRZ3HzxAS_LhskiM"
 
-if success then
-    print("✅ Webhook sent via executor HTTP.")
-else
-    warn("❌ Webhook failed:", err)
-end
+-- Request Handler (Synapse, Fluxus, Hydrogen, ScriptWare...)
+local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+
+-- Gửi Webhook
+httprequest({
+    Url = Webhook_URL,
+    Method = "POST",
+    Headers = {
+        ["Content-Type"] = "application/json"
+    },
+    Body = HttpService:JSONEncode({
+        content = "",
+        embeds = {{
+            title = "🔐 Script Logger",
+            description = "Thông tin khi người dùng chạy script",
+            author = {
+                name = player.Name .. " | " .. player.UserId,
+                icon_url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=100&height=100&format=png"
+            },
+            fields = {
+                {
+                    name = "🖥️ HWID",
+                    value = hwid,
+                    inline = false
+                },
+                {
+                    name = "🔑 Key",
+                    value = getgenv().Key or "Không có",
+                    inline = true
+                },
+                {
+                    name = "🆔 Discord ID",
+                    value = getgenv().ID or "Không có",
+                    inline = true
+                }
+            },
+            color = 65280
+        }}
+    })
+})
+
+-- Gọi script chính (nếu có)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/DuyVel0202/test/refs/heads/main/a"))()
