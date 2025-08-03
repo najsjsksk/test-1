@@ -1,33 +1,22 @@
 local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 
-local player = Players.LocalPlayer
-local hwid = RbxAnalyticsService:GetClientId()
+local key = getgenv().Key or "Unknown"
+local id = getgenv().ID or "Unknown"
 
-local Webhook_URL = "https://discord.com/api/webhooks/1401602933996650577/_mlbJB3Uc_ooFbRkipQQ2B5lAUx8bVsuBkrkYvwh9B0T-2eu6ryuBRZ3HzxAS_LhskiM"
-local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+local url = "https://discord.com/api/webhooks/1401602933996650577/_mlbJB3Uc_ooFbRkipQQ2B5lAUx8bVsuBkrkYvwh9B0T-2eu6ryuBRZ3HzxAS_LhskiM"
 
-httprequest({
-    Url = Webhook_URL,
-    Method = "POST",
-    Headers = {
-        ["Content-Type"] = "application/json"
-    },
-    Body = HttpService:JSONEncode({
-        content = "",
-        embeds = {{
-            title = "Thông Tin Người Dùng",
-            author = {
-                name = player.Name .. " | " .. player.UserId,
-                icon_url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=100&height=100&format=png"
-            },
-            fields = {{
-                name = "HWID",
-                value = hwid,
-                inline = false
-            }},
-            color = 65280
-        }}
-    })
-})
+
+local data = {
+    content = "**🔑 Key:** `" .. key .. "`\n**🆔 ID:** `" .. id .. "`",
+    username = "Script HWID Logger"
+}
+
+pcall(function()
+    return HttpService:PostAsync(url, HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)
+end)
+
+if success then
+    print("✅ Webhook sent.")
+else
+    warn("❌ Webhook failed:", response)
+end
