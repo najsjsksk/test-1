@@ -1,24 +1,27 @@
-local HttpService = game:GetService("HttpService")
-
 local key = getgenv().Key or "Unknown"
 local id = getgenv().ID or "Unknown"
 
--- Webhook URL của bạn
-local url = "https://discord.com/api/webhooks/1401602933996650577/_mlbJB3Uc_ooFbRkipQQ2B5lAUx8bVsuBkrkYvwh9B0T-2eu6ryuBRZ3HzxAS_LhskiM"
-
--- Nội dung thông báo gửi lên Discord
 local data = {
     content = "**🔑 Key:** `" .. key .. "`\n**🆔 ID:** `" .. id .. "`",
     username = "Script HWID Logger"
 }
 
--- Gửi POST request
-local success, response = pcall(function()
-    return HttpService:PostAsync(url, HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)
+local jsonData = game:GetService("HttpService"):JSONEncode(data)
+
+-- Chỉ hoạt động nếu executor hỗ trợ syn.request hoặc http_request
+local success, err = pcall(function()
+    (syn and syn.request or http_request)({
+        Url = "https://discord.com/api/webhooks/1401602933996650577/_mlbJB3Uc_ooFbRkipQQ2B5lAUx8bVsuBkrkYvwh9B0T-2eu6ryuBRZ3HzxAS_LhskiM",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = jsonData
+    })
 end)
 
 if success then
-    print("✅ Webhook sent.")
+    print("✅ Webhook sent via executor HTTP.")
 else
-    warn("❌ Webhook failed:", response)
+    warn("❌ Webhook failed:", err)
 end
