@@ -15,41 +15,38 @@ local httprequest = (syn and syn.request) or (http and http.request) or http_req
 
 -- Gửi Webhook
 httprequest({
-    Url = Webhook_URL,
-    Method = "POST",
-    Headers = {
-        ["Content-Type"] = "application/json"
-    },
-    Body = HttpService:JSONEncode({
-        content = "",
-        embeds = {{
-            title = "🔐 Script Logger",
-            description = "Thông tin khi người dùng chạy script",
-            author = {
-                name = player.Name .. " | " .. player.UserId,
-                icon_url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=100&height=100&format=png"
-            },
-            fields = {
-                {
-                    name = "🖥️ HWID",
-                    value = hwid,
-                    inline = false
-                },
-                {
-                    name = "🔑 Key",
-                    value = getgenv().Key or "Không có",
-                    inline = true
-                },
-                {
-                    name = "🆔 Discord ID",
-                    value = getgenv().ID or "Không có",
-                    inline = true
-                }
-            },
-            color = 65280
-        }}
-    })
+    Url = Webhook_URL,
+    Method = "POST",
+    Headers = {
+        ["Content-Type"] = "application/json"
+    },
+    Body = HttpService:JSONEncode({
+        content = "",
+        embeds = {{
+            title = "🔐 Script Logger",
+            description = "Thông tin khi người dùng chạy script",
+            author = {
+                name = player.Name .. " | " .. player.UserId,
+                icon_url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=100&height=100&format=png"
+            },
+            fields = {
+                {
+                    name = "🖥️ HWID",
+                    value = hwid,
+                    inline = false
+                },
+                {
+                    name = "🔑 Key",
+                    value = getgenv().Key or "Không có",
+                    inline = true
+                },
+                {
+                    name = "🆔 Discord ID",
+                    value = getgenv().ID or "Không có",
+                    inline = true
+                }
+            },
+            color = 65280
+        }}
+    })
 })
-
--- Gọi script chính (nếu có)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/DuyVel0202/test/refs/heads/main/a"))()
