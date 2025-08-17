@@ -1,0 +1,1419 @@
+--// Khởi tạo GUI nhập key
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local HttpService = game:GetService("HttpService")
+local StarterGui = game:GetService("StarterGui")
+
+local KEY_URL = "https://raw.githubusercontent.com/dung145/ZENX/refs/heads/main/key.txt" -- Thay bằng link RAW GitHub chứa key
+
+-- Tạo GUI nhập key
+local gui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+gui.Name = "KeyCheckGUI"
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 160)
+frame.Position = UDim2.new(0.5, -150, 0.5, -80)
+frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.BackgroundTransparency = 0.1
+
+local uicorner = Instance.new("UICorner", frame)
+uicorner.CornerRadius = UDim.new(0, 12)
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 35)
+title.BackgroundTransparency = 1
+title.Text = "NHẬP KEY ĐỂ TIẾP TỤC"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local textbox = Instance.new("TextBox", frame)
+textbox.Size = UDim2.new(1, -40, 0, 35)
+textbox.Position = UDim2.new(0, 20, 0, 50)
+textbox.PlaceholderText = "Nhập key tại đây..."
+textbox.Font = Enum.Font.Gotham
+textbox.TextSize = 16
+textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+textbox.ClearTextOnFocus = false
+textbox.Text = ""
+local corner2 = Instance.new("UICorner", textbox)
+corner2.CornerRadius = UDim.new(0, 8)
+
+local button = Instance.new("TextButton", frame)
+button.Size = UDim2.new(0.5, -25, 0, 35)
+button.Position = UDim2.new(0.5, 5, 1, -45)
+button.Text = "XÁC NHẬN"
+button.Font = Enum.Font.GothamBold
+button.TextSize = 16
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.BackgroundColor3 = Color3.fromRGB(60, 120, 200)
+local corner3 = Instance.new("UICorner", button)
+corner3.CornerRadius = UDim.new(0, 8)
+
+-- Hàm gửi thông báo nhỏ
+local function notify(title, text, duration)
+	pcall(function()
+		StarterGui:SetCore("SendNotification", {
+			Title = title or "Thông báo",
+			Text = text or "",
+			Duration = duration or 5
+		})
+	end)
+end
+
+-- Hàm lấy danh sách key từ GitHub
+local function getKeyList()
+	local success, response = pcall(function()
+		return game:HttpGet(KEY_URL)
+	end)
+
+	if success and response then
+		local keyList = {}
+		for line in response:gmatch("[^\r\n]+") do
+			local clean = line:match("^%s*(.-)%s*$")
+			if clean ~= "" then
+				table.insert(keyList, clean)
+			end
+		end
+		return keyList
+	else
+		notify("Lỗi", "Không thể tải key từ GitHub", 5)
+		return {}
+	end
+end
+
+-- Hàm kiểm tra key nhập vào
+local function isValidKey(input)
+	if not input or input == "" then
+		notify("Lỗi", "Bạn chưa nhập key!", 4)
+		return false
+	end
+
+	local keys = getKeyList()
+	for _, k in ipairs(keys) do
+		if input == k then
+			return true
+		end
+	end
+
+	return false
+end
+
+-- 📌 CHỖ NÀY BẠN DÁN SCRIPT GỐC
+function loadFarmBoss()
+	-- Bạn xóa đoạn dưới đây và dán toàn bộ script farm boss stealth ZENmode X của bạn vào
+	loadstring([[
+-- 🧊 Nút RightCtrl ảo đẹp, có ảnh, dùng cho Delta mobile
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- 📦 Tạo ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "RightCtrlVirtual"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.Parent = playerGui
+
+-- 🔲 Tạo nút vuông
+local ctrlButton = Instance.new("ImageButton")
+ctrlButton.Name = "RightCtrlButton"
+ctrlButton.Size = UDim2.new(0, 55, 0, 55)
+ctrlButton.Position = UDim2.new(0, 600, 0.10, 0) -- vị trí cao hơn (bên trái, giữa màn)
+ctrlButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ctrlButton.BorderSizePixel = 0
+ctrlButton.Image = "rbxassetid://88345955642142" -- 🔁 Thay bằng icon bạn muốn
+ctrlButton.Parent = gui
+
+-- 🟦 Bo góc nút
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(1, 0)
+corner.Parent = ctrlButton
+
+-- ⚪ Viền trắng
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(255, 255, 255)
+stroke.Thickness = 1.5
+stroke.Parent = ctrlButton
+
+-- 👆 Khi bấm giữ, giả lập RightCtrl (Delta hỗ trợ keypress)
+ctrlButton.MouseButton1Down:Connect(function()
+	pcall(function()
+		keypress(Enum.KeyCode.RightControl)
+	end)
+end)
+-- Fluent UI
+local Library = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+-- tab
+local MainWindow = Library:CreateWindow({
+    Title = "💀RENX💀  |",
+    SubTitle = "tiktok:ungdungtutai4 ",
+    TabWidth = 120,
+    Size = UDim2.fromOffset(520, 300),
+    Acrylic = true,
+    Theme = "Rose",
+    MinimizeKey = Enum.KeyCode.RightControl
+})
+-- 📁 Tab Main
+local Tabs = {}
+Tabs.main = MainWindow:AddTab({Title = "Main"})
+
+-- ẩn balo balo
+Tabs.main:AddButton({
+    Title = "Tắt Balo",
+    Description = "Ẩn Inventory",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local gui = player:FindFirstChild("PlayerGui")
+        if gui then
+            local inv = gui:FindFirstChild("Inventory")
+            if inv then
+                local mainFrame = inv:FindFirstChild("MainFrame")
+                if mainFrame then
+                    mainFrame.Visible = false
+                else
+                    warn("[⚠] Không tìm thấy 'MainFrame' trong Inventory")
+                end
+            else
+                warn("[⚠] Không tìm thấy 'Inventory' trong PlayerGui")
+            end
+        else
+            warn("[⚠] Không tìm thấy PlayerGui")
+        end
+    end
+})
+-- hiện balo balo
+Tabs.main:AddButton({
+    Title = "Bật Lại Balo",
+    Description = "Hiện Inventory trở lại",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local gui = player:FindFirstChild("PlayerGui")
+        if gui then
+            local inv = gui:FindFirstChild("Inventory")
+            if inv then
+                local mainFrame = inv:FindFirstChild("MainFrame")
+                if mainFrame then
+                    mainFrame.Visible = true
+                else
+                    warn("[⚠] Không tìm thấy 'MainFrame' trong Inventory")
+                end
+            else
+                warn("[⚠] Không tìm thấy 'Inventory' trong PlayerGui")
+            end
+        else
+            warn("[⚠] Không tìm thấy PlayerGui")
+        end
+    end
+})
+-- ⚙️ Biến toggle Auto Băng Gạc
+local AutoBangGac = false
+local CanUseBandage = true
+
+-- 🩹 Toggle bật tắt Auto Băng Gạc
+Tabs.main:AddToggle("AutoBangGac", {
+    Title = "Auto Băng Gạc (HP < 60)",
+    Default = false,
+    Callback = function(state)
+        AutoBangGac = state
+        Fluent:Notify({
+            Title = "Auto Heal",
+            Content = state and "✅ Đã bật tự hồi máu khi HP < 60." or "❌ Đã tắt tự hồi máu.",
+            Duration = 3
+        })
+    end
+})
+
+-- 📦 Hàm lấy lại băng gạc nếu mất
+local function GetBackpack(itemName)
+    local success, err = pcall(function()
+        local Knit = game:GetService("ReplicatedStorage"):WaitForChild("KnitPackages")
+            :WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0")
+            :WaitForChild("knit")
+        local RE = Knit.Services.InventoryService.RE.updateInventory
+
+        RE:FireServer("refresh")
+        task.wait(1)
+        RE:FireServer("eue", itemName)
+    end)
+    if not success then
+        warn("❌ Lỗi khi lấy lại băng gạc:", err)
+    end
+end
+
+-- ❤️ Vòng lặp kiểm tra máu và tự dùng băng
+task.spawn(function()
+    while task.wait(1) do
+        if AutoBangGac and CanUseBandage then
+            local player = game.Players.LocalPlayer
+            local char = player.Character
+            local humanoid = char and char:FindFirstChild("Humanoid")
+            local backpack = player:FindFirstChild("Backpack")
+
+            if humanoid and humanoid.Health < 60 then
+                CanUseBandage = false
+
+                -- Lấy băng gạc nếu chưa có
+                if not backpack:FindFirstChild("băng gạc") then
+                    GetBackpack("băng gạc")
+                    task.wait(1.5)
+                end
+
+                -- Dùng băng gạc nếu có
+                if backpack:FindFirstChild("băng gạc") then
+                    local tool = backpack:FindFirstChild("băng gạc")
+                    pcall(function()
+                        tool.Parent = char
+                        task.wait(0.5)
+                        humanoid:EquipTool(tool)
+                        task.wait(0.5)
+                        tool:Activate()
+                    end)
+                end
+
+                -- Chờ máu hồi lại
+                repeat task.wait(1) until humanoid.Health > 80 or not AutoBangGac
+                task.wait(2)
+                CanUseBandage = true
+            end
+        end
+    end
+end)
+-- 🇻🇳 Biến lưu vũ khí được chọn AttackWeapon = nil
+
+-- 🇻🇳 Tạo Tab framboss (giả sử MainWindow đã được tạo từ Library)
+local Tabs = {}
+Tabs.framboss = MainWindow:AddTab({ Title = "framboss" })
+
+-- 🇻🇳 Nút chọn vũ khí
+local a = Tabs.framboss:AddButton({
+	Title = "Chọn Vũ Khí",
+	Description = "Vũ Khí Hiện Tại : None",
+	Callback = function()
+		local weaponButtons = {}
+
+		-- Danh sách vũ khí trong balo
+		for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+			table.insert(weaponButtons, {
+				Title = tool.Name,
+				Callback = function()
+					AttackWeapon = tool.Name
+					print("✅ Vũ khí đã chọn:", tool.Name)
+				end
+			})
+		end
+
+		-- Nút chọn None (tắt tự trang bị)
+		table.insert(weaponButtons, {
+			Title = "🔕 Không Tự Trang Bị",
+			Callback = function()
+				AttackWeapon = nil
+				print("❎ Đã tắt tự trang bị.")
+			end
+		})
+
+		-- Nút thoát
+		table.insert(weaponButtons, {
+			Title = "❌ Thoát",
+			Callback = function()
+				print("⛔ Đã thoát chọn vũ khí.")
+			end
+		})
+
+		-- Hiển thị dialog chọn vũ khí
+		MainWindow:Dialog({
+			Title = "Chọn Vũ Khí",
+			Content = "Hãy chọn một vũ khí từ balo hoặc tắt tự trang bị:",
+			Buttons = weaponButtons
+		})
+	end
+})
+
+-- 🔁 Cập nhật mô tả nút
+task.spawn(function()
+	while task.wait(1) do
+		if AttackWeapon then
+			a:SetDesc("Vũ Khí Hiện Tại : " .. AttackWeapon)
+		else
+			a:SetDesc("Vũ Khí Hiện Tại : None")
+		end
+	end
+end)
+
+-- 🔄 Tự động trang bị lại tool nếu bị mất
+task.spawn(function()
+	while task.wait(1) do
+		if AttackWeapon and typeof(AttackWeapon) == "string" then
+			local lp = game.Players.LocalPlayer
+			local char = lp.Character
+			local backpack = lp:FindFirstChild("Backpack")
+
+			if char and not char:FindFirstChild(AttackWeapon) and backpack then
+				local tool = backpack:FindFirstChild(AttackWeapon)
+				if tool then
+					tool.Parent = char
+					print("🔧 Đã tự trang bị lại tool:", AttackWeapon)
+				end
+			end
+		end
+	end
+end)
+function loadFarmBoss()
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local lp = Players.LocalPlayer
+
+-- Tạo GUI ZENmode X
+local gui = Instance.new("ScreenGui")
+gui.Name = "FarmBossGUI"
+pcall(function()
+	gui.Parent = game:FindFirstChildOfClass("CoreGui")
+end)
+if not gui.Parent then
+	gui.Parent = lp:WaitForChild("PlayerGui")
+end
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 250, 0, 150)
+frame.Position = UDim2.new(0, 20, 0, 100)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BackgroundTransparency = 0.1
+frame.BorderSizePixel = 0
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Text = "💀RENX💀"
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.new(1,1,1)
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
+
+local toggle = Instance.new("TextButton", frame)
+toggle.Size = UDim2.new(0, 200, 0, 30)
+toggle.Position = UDim2.new(0, 25, 0, 40)
+toggle.Text = "Bật Farm Boss"
+toggle.BackgroundColor3 = Color3.fromRGB(60,60,60)
+toggle.TextColor3 = Color3.new(1,1,1)
+toggle.Font = Enum.Font.Gotham
+toggle.TextScaled = true
+Instance.new("UICorner", toggle)
+
+local distanceBox = Instance.new("TextBox", frame)
+distanceBox.Size = UDim2.new(0, 200, 0, 25)
+distanceBox.Position = UDim2.new(0, 25, 0, 80)
+distanceBox.PlaceholderText = "Khoảng cách (VD: 12)"
+distanceBox.Text = ""
+distanceBox.ClearTextOnFocus = false
+distanceBox.BackgroundColor3 = Color3.fromRGB(45,45,45)
+distanceBox.TextColor3 = Color3.new(1,1,1)
+distanceBox.Font = Enum.Font.Gotham
+distanceBox.TextScaled = true
+Instance.new("UICorner", distanceBox)
+
+local speedBox = Instance.new("TextBox", frame)
+speedBox.Size = UDim2.new(0, 200, 0, 25)
+speedBox.Position = UDim2.new(0, 25, 0, 110)
+speedBox.PlaceholderText = "Tốc độ vòng (VD: 2)"
+speedBox.Text = ""
+speedBox.ClearTextOnFocus = false
+speedBox.BackgroundColor3 = Color3.fromRGB(45,45,45)
+speedBox.TextColor3 = Color3.new(1,1,1)
+speedBox.Font = Enum.Font.Gotham
+speedBox.TextScaled = true
+Instance.new("UICorner", speedBox)
+
+-- ===== NÚT CỘNG/TRỪ =====
+local distMinus = Instance.new("TextButton", frame)
+distMinus.Size = UDim2.new(0, 25, 0, 25)
+distMinus.Position = UDim2.new(0, 0, 0, 80)
+distMinus.Text = "-"
+distMinus.BackgroundColor3 = Color3.fromRGB(80, 40, 40)
+distMinus.TextColor3 = Color3.new(1, 1, 1)
+distMinus.Font = Enum.Font.GothamBold
+distMinus.TextScaled = true
+Instance.new("UICorner", distMinus)
+
+local distPlus = Instance.new("TextButton", frame)
+distPlus.Size = UDim2.new(0, 25, 0, 25)
+distPlus.Position = UDim2.new(0, 230, 0, 80)
+distPlus.Text = "+"
+distPlus.BackgroundColor3 = Color3.fromRGB(40, 80, 40)
+distPlus.TextColor3 = Color3.new(1, 1, 1)
+distPlus.Font = Enum.Font.GothamBold
+distPlus.TextScaled = true
+Instance.new("UICorner", distPlus)
+
+local speedMinus = Instance.new("TextButton", frame)
+speedMinus.Size = UDim2.new(0, 25, 0, 25)
+speedMinus.Position = UDim2.new(0, 0, 0, 110)
+speedMinus.Text = "-"
+speedMinus.BackgroundColor3 = Color3.fromRGB(80, 40, 40)
+speedMinus.TextColor3 = Color3.new(1, 1, 1)
+speedMinus.Font = Enum.Font.GothamBold
+speedMinus.TextScaled = true
+Instance.new("UICorner", speedMinus)
+
+local speedPlus = Instance.new("TextButton", frame)
+speedPlus.Size = UDim2.new(0, 25, 0, 25)
+speedPlus.Position = UDim2.new(0, 230, 0, 110)
+speedPlus.Text = "+"
+speedPlus.BackgroundColor3 = Color3.fromRGB(40, 80, 40)
+speedPlus.TextColor3 = Color3.new(1, 1, 1)
+speedPlus.Font = Enum.Font.GothamBold
+speedPlus.TextScaled = true
+Instance.new("UICorner", speedPlus)
+
+local function adjustValue(box, delta)
+    local current = tonumber(box.Text) or 0
+    local newValue = math.max(0, math.floor((current + delta) * 10 + 0.5) / 10)
+    box.Text = tostring(newValue)
+end
+
+distMinus.MouseButton1Click:Connect(function() adjustValue(distanceBox, -0.1) end)
+distPlus.MouseButton1Click:Connect(function() adjustValue(distanceBox, 0.1) end)
+speedMinus.MouseButton1Click:Connect(function() adjustValue(speedBox, -0.1) end)
+speedPlus.MouseButton1Click:Connect(function() adjustValue(speedBox, 0.1) end)
+-- ===== HẾT NÚT CỘNG/TRỪ =====
+
+-- Biến điều khiển
+local AutoFarm = false
+local orbitConnection, attackConnection
+local character, hrp
+
+-- Toạ độ trung tâm cố định
+local centerPos = Vector3.new(-2577, 279, -1379)
+local orbitAngle = 0 -- Góc quay quanh tâm
+
+function getTool()
+	for _, tool in pairs(lp.Character:GetChildren()) do
+		if tool:IsA("Tool") then
+			return tool
+		end
+	end
+	return nil
+end
+
+function attachStealthMover(hrp)
+	local bg = Instance.new("BodyGyro", hrp)
+	bg.Name = "ZENgyro"
+	bg.MaxTorque = Vector3.new(1e6,1e6,1e6)
+	bg.P = 1e4
+
+	local bp = Instance.new("BodyPosition", hrp)
+	bp.Name = "ZENpos"
+	bp.MaxForce = Vector3.new(1e6,1e6,1e6)
+	bp.P = 1e4
+	bp.D = 100
+end
+
+function removeStealthMover()
+	if hrp then
+		local bg = hrp:FindFirstChild("ZENgyro")
+		local bp = hrp:FindFirstChild("ZENpos")
+		if bg then bg:Destroy() end
+		if bp then bp:Destroy() end
+	end
+end
+
+function startFarm()
+	character = lp.Character
+	hrp = character and character:FindFirstChild("HumanoidRootPart")
+	if not character or not hrp then print("[DEBUG][Character]: Mất") return end
+
+	attachStealthMover(hrp)
+
+	orbitConnection = RunService.Heartbeat:Connect(function(dt)
+		if not character or not character:FindFirstChild("HumanoidRootPart") then
+			character = lp.Character
+			hrp = character and character:FindFirstChild("HumanoidRootPart")
+			if not hrp then stopFarm() return end
+			attachStealthMover(hrp)
+		end
+
+		local distance = tonumber(distanceBox.Text) or 10
+		local speed = tonumber(speedBox.Text) or 2
+		local height = 0 -- có thể chỉnh nếu muốn bay cao hơn tâm
+
+		orbitAngle += speed * dt
+		local offset = Vector3.new(math.cos(orbitAngle) * distance, height, math.sin(orbitAngle) * distance)
+		local targetPos = centerPos + offset
+
+		updateMover(targetPos, centerPos)
+	end)
+
+	attackConnection = RunService.Heartbeat:Connect(function()
+		local tool = getTool()
+		if tool and tool:FindFirstChild("Handle") then
+			tool:Activate()
+		end
+	end)
+end
+
+function stopFarm()
+	removeStealthMover()
+	if orbitConnection then orbitConnection:Disconnect() orbitConnection = nil end
+	if attackConnection then attackConnection:Disconnect() attackConnection = nil end
+end
+
+toggle.MouseButton1Click:Connect(function()
+	AutoFarm = not AutoFarm
+	if AutoFarm then
+		toggle.Text = "Đang Bay Vòng..."
+		task.spawn(function()
+			while AutoFarm do
+				startFarm()
+				repeat task.wait(0.2) until not AutoFarm
+				stopFarm()
+			end
+		end)
+	else
+		toggle.Text = "Bật Farm Boss"
+		stopFarm()
+	end
+end)
+function updateMover(pos, faceTarget)
+	if not hrp then return end
+	local bg = hrp:FindFirstChild("ZENgyro")
+	local bp = hrp:FindFirstChild("ZENpos")
+
+	-- Góc lệch aim boss (đơn vị độ, âm lệch trái, dương lệch phải)
+	local aimOffsetDegrees = -11
+	local offsetAngle = math.rad(aimOffsetDegrees)
+
+	-- Tìm boss gần nhất trong workspace.GiangHo2.NPCs
+	local bossFolder = workspace:FindFirstChild("GiangHo2") and workspace.GiangHo2:FindFirstChild("NPCs")
+	if bossFolder then
+		local nearestBoss, nearestDist
+		for _, npc in pairs(bossFolder:GetChildren()) do
+			if npc:IsA("Model") and npc:FindFirstChild("HumanoidRootPart") then
+				local dist = (npc.HumanoidRootPart.Position - hrp.Position).Magnitude
+				if not nearestBoss or dist < nearestDist then
+					nearestBoss = npc
+					nearestDist = dist
+				end
+			end
+		end
+		if nearestBoss then
+			local direction = (nearestBoss.HumanoidRootPart.Position - hrp.Position).Unit
+			local rotatedDirection = CFrame.Angles(0, offsetAngle, 0):VectorToWorldSpace(direction)
+			faceTarget = hrp.Position + rotatedDirection
+		end
+	end
+
+	if bg and faceTarget then
+		local direction = (faceTarget - hrp.Position).Unit
+		bg.CFrame = CFrame.new(hrp.Position, hrp.Position + direction)
+	end
+
+	if bp then
+		bp.Position = pos + Vector3.new(0, math.sin(tick() * 5) * 0.5, 0)
+	end
+end
+
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+
+-- Tạo GUI hiển thị máu boss
+local hpGUI = Instance.new("ScreenGui")
+hpGUI.Name = "BossHealthDisplay"
+hpGUI.Parent = lp:WaitForChild("PlayerGui")
+
+local hpLabel = Instance.new("TextLabel", hpGUI)
+hpLabel.Size = UDim2.new(0, 200, 0, 35)
+hpLabel.Position = UDim2.new(1, -210, 0, 10) -- Góc trên phải màn hình, chỉnh lại nếu cần
+hpLabel.BackgroundTransparency = 0.4
+hpLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+hpLabel.TextColor3 = Color3.fromRGB(255, 70, 70)
+hpLabel.Font = Enum.Font.GothamBold
+hpLabel.TextSize = 20
+hpLabel.Text = "Máu Boss: Đang tìm..."
+Instance.new("UICorner", hpLabel)
+
+-- Hàm tìm boss gần nhất trong workspace.GiangHo2.NPCs
+local function getBoss()
+	local bossFolder = workspace:FindFirstChild("GiangHo2") and workspace.GiangHo2:FindFirstChild("NPCs")
+	if not bossFolder then return nil end
+	local character = lp.Character
+	if not character then return nil end
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local nearestBoss, nearestDist
+	for _, npc in pairs(bossFolder:GetChildren()) do
+		if npc:IsA("Model") and npc:FindFirstChild("HumanoidRootPart") and npc:FindFirstChild("Humanoid") then
+			local dist = (npc.HumanoidRootPart.Position - hrp.Position).Magnitude
+			if not nearestBoss or dist < nearestDist then
+				nearestBoss = npc
+				nearestDist = dist
+			end
+		end
+	end
+	return nearestBoss
+end
+
+task.spawn(function()
+	while true do
+		local boss = getBoss()
+		if boss and boss:FindFirstChild("Humanoid") then
+			local hp = math.floor(boss.Humanoid.Health)
+			local max = math.floor(boss.Humanoid.MaxHealth)
+			hpLabel.Text = "Máu Boss: " .. hp .. " / " .. max
+		else
+			hpLabel.Text = "Máu Boss: Không tìm thấy"
+		end
+		task.wait(0.2)
+	end
+end)
+end
+Tabs.framboss:AddToggle("FarmBossGocToggle", {
+    Title = "Farm Boss",
+    Callback = function(state)
+        if state then
+            loadFarmBoss()
+        end
+    end
+})
+-- Slider chỉnh tầm nhặt
+Tabs.framboss:AddSlider("LootRadius", {
+    Title = "📏 Tầm nhặt ",
+    Description = "Khoảng cách để tự động nhặt",
+    Default = 50,
+    Min = 10,
+    Max = 200,
+    Rounding = 0,
+    Callback = function(value)
+        lootRadius = value
+    end
+})
+-- Toggle bật Auto Loot
+Tabs.framboss:AddToggle("AutoLoot", {
+    Title = "auto nhặt (teleport)",
+    Description = "Tự động tele nhẹ lại gần rương để nhặt lưu ý vào khu boss mới bậ",
+    Default = false,
+    Callback = function(state)
+        autoLootEnabled = state
+        wasAutoDisabled = false
+
+        local function startAutoLoot()
+            if lootConnection then lootConnection:Disconnect() end
+            lootConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                local plr = game.Players.LocalPlayer
+                local char = plr.Character
+                if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+                local hrp = char.HumanoidRootPart
+                local foundPrompt = false
+                local closestPrompt = nil
+                local closestDist = math.huge
+                local promptPos = nil
+
+                for _, prompt in ipairs(workspace:GetDescendants()) do
+                    if prompt:IsA("ProximityPrompt") and prompt.Enabled then
+                        local pos
+                        if prompt.Parent:IsA("BasePart") then
+                            pos = prompt.Parent.Position
+                        elseif prompt.Parent:IsA("Attachment") and prompt.Parent.Parent:IsA("BasePart") then
+                            pos = prompt.Parent.WorldPosition
+                        end
+
+                        if pos then
+                            local dist = (hrp.Position - pos).Magnitude
+                            if dist <= lootRadius and dist < closestDist then
+                                closestPrompt = prompt
+                                closestDist = dist
+                                promptPos = pos
+                            end
+                        end
+                    end
+                end
+
+                if closestPrompt and promptPos then
+                    foundPrompt = true
+                    -- Teleport nhẹ đến gần prompt (không chạm hẳn)
+                    local direction = (promptPos - hrp.Position).Unit
+                    local newPosition = promptPos - direction * 2 -- cách 2 studs để tránh đè prompt
+
+                    hrp.CFrame = CFrame.new(newPosition)
+                    fireproximityprompt(closestPrompt)
+                end
+
+                if not foundPrompt then
+                    autoLootEnabled = false
+                    wasAutoDisabled = true
+                    if lootConnection then lootConnection:Disconnect() end
+                    Library:Notify({
+                        Title = "Auto Loot",
+                        Content = "Không còn gì để loot, tạm dừng...",
+                        Duration = 3
+                    })
+                end
+            end)
+        end
+
+        if autoLootEnabled then
+            startAutoLoot()
+        elseif lootConnection then
+            lootConnection:Disconnect()
+        end
+        -- Luôn kiểm tra ProximityPrompt
+        if not checkConnection then
+            checkConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                if not autoLootEnabled and wasAutoDisabled then
+                    local plr = game.Players.LocalPlayer
+                    local char = plr.Character
+                    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+                    local hrp = char.HumanoidRootPart
+
+                    for _, prompt in ipairs(workspace:GetDescendants()) do
+                        if prompt:IsA("ProximityPrompt") and prompt.Enabled then
+                            local pos
+                            if prompt.Parent:IsA("BasePart") then
+                                pos = prompt.Parent.Position
+                            elseif prompt.Parent:IsA("Attachment") and prompt.Parent.Parent:IsA("BasePart") then
+                                pos = prompt.Parent.WorldPosition
+                            end
+                            if pos then
+                                local dist = (hrp.Position - pos).Magnitude
+                                if dist <= lootRadius then
+                                    autoLootEnabled = true
+                                    wasAutoDisabled = false
+                                    Library:Notify({
+                                        Title = "Auto Loot",
+                                        Content = "Đã phát hiện vật phẩm, bật lại loot!",
+                                        Duration = 3
+                                    })
+                                    startAutoLoot()
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end
+})
+Tabs.framboss:AddButton({
+    Title = "🌀 Giảm 30% Đồ Họa",
+    Description = "Tăng FPS và giảm lag cho thiết bị yếu",
+    Callback = function()
+        print("[ZENmode X] Đang giảm đồ họa...")
+
+        -- Giảm chất lượng môi trường
+        game.Lighting.GlobalShadows = false
+        game.Lighting.FogEnd = 100000
+        game.Lighting.Brightness = 1
+
+        -- Tắt hiệu ứng chi tiết
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("Decal") or v:IsA("Texture") then
+                v.Transparency = 1
+            elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+                v.Enabled = false
+            elseif v:IsA("Explosion") then
+                v:Destroy()
+            end
+        end
+
+        -- Giảm chất lượng vật thể
+        settings().Rendering.QualityLevel = Enum.QualityLevel.Level02
+
+        print("[ZENmode X] Đã giảm đồ họa xong.")
+    end
+})
+-- ⏰ ANTI-AFK sau mỗi 19.5 phút (chống kick)
+task.spawn(function()
+	local vu = game:GetService("VirtualUser")
+
+	game:GetService("Players").LocalPlayer.Idled:Connect(function()
+		vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+		task.wait(1)
+		vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+		print("✅ Anti-AFK kích hoạt.")
+	end)
+
+	while task.wait(1170) do -- 19 phút 30 giây
+		vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+		task.wait(1)
+		vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+		print("🔁 Anti-AFK tự động sau 19.5 phút.")
+	end
+end)
+Tabs.FarmWood = MainWindow:AddTab({ Title = "Farm Gỗ" })
+
+-- 🌳 Toggle Auto Tree Farm
+Tabs.FarmWood:AddToggle("AutoFarmToggle", {
+    Title = "Auto bay đến cây",
+    Default = false,
+    Callback = function(state)
+        farming = state
+        if farming then
+            task.spawn(startFarming)
+        end
+    end
+})
+
+--------------------------------------------------------------------------------
+
+-- 📦 Services
+local Players = game:GetService("Players")
+local Rep = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local VIM = game:GetService("VirtualInputManager")
+
+-- 🧍‍♂️ Player
+local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+-- 🔄 Cập nhật hrp khi respawn
+player.CharacterAdded:Connect(function(newChar)
+    char = newChar
+    hrp = newChar:WaitForChild("HumanoidRootPart")
+end)
+
+-- 📌 Cây và nơi bán
+local trees = {
+    Vector3.new(1665.3, 19.0, -398.2),
+    Vector3.new(1696.9, 18.9, -406.2),
+    Vector3.new(1728.0, 18.9, -380.2),
+    Vector3.new(1699.9, 19.9, -465.6),
+    Vector3.new(1626.1, 18.9, -467.8),
+    Vector3.new(1723.1, 18.9, -502.5),
+    Vector3.new(1726.9, 19.4, -247.0),
+    Vector3.new(1635.7, 18.9, -200.7),
+    Vector3.new(1645.6, 18.9, -110.6),
+    Vector3.new(1678.6, 18.9, -233.9),
+}
+local sellPos = Vector3.new(1628.5, 22.6, -279.3)
+
+-- 🔄 State
+farming = false
+_G.AutoEquipAxe = false
+_G.AutoArrowMinigame = false
+local runningAxeLoop = false
+local arrowWatcherConn, runningArrow = nil, false
+local toolName = "Rìu"
+
+-- 🚀 Tween teleport (fix mất hrp)
+local function teleportSmooth(pos)
+    if not hrp or not hrp.Parent then return end
+    local tween = TweenService:Create(hrp, TweenInfo.new(1.2, Enum.EasingStyle.Linear), {CFrame = CFrame.new(pos)})
+    tween:Play()
+    tween.Completed:Wait()
+end
+
+-- 🟢 Prompt
+local function firePromptAt(pos)
+    for _, prompt in ipairs(workspace:GetDescendants()) do
+        if prompt:IsA("ProximityPrompt") and (prompt.Parent.Position - pos).Magnitude <= 10 then
+            fireproximityprompt(prompt, 1)
+            break
+        end
+    end
+end
+
+-- 🌲 Vòng lặp chính
+function startFarming()
+    while farming do
+        local chopped = 0
+        for _, treePos in ipairs(trees) do
+            if not farming then return end
+            teleportSmooth(treePos)
+            wait(1)
+            firePromptAt(treePos)
+            chopped += 1
+            for i = 10, 1, -1 do
+                if not farming then return end
+                wait(1)
+            end
+        end
+
+        if chopped >= 10 and farming then
+            teleportSmooth(sellPos)
+            wait(1)
+            firePromptAt(sellPos)
+            wait(3)
+        end
+        wait(1)
+    end
+end
+
+--------------------------------------------------------------------------------
+-- 🪓 AUTO EQUIP RÌU
+local function PurchaseAxe()
+    local invGui = player:WaitForChild("PlayerGui"):WaitForChild("Inventory")
+        :WaitForChild("MainFrame"):WaitForChild("Container")
+        :WaitForChild("Main"):WaitForChild("ToolList")
+        :WaitForChild("ScrollingFrame")
+    local hasAxe = invGui:FindFirstChild(toolName)
+    if not hasAxe then
+        local shopService = Rep:WaitForChild("KnitPackages")
+            :WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0")
+            :WaitForChild("knit"):WaitForChild("Services")
+            :WaitForChild("ShopService"):WaitForChild("RE"):WaitForChild("buyItem")
+        shopService:FireServer(toolName, 1)
+        task.wait(1)
+    end
+end
+
+local function RequestToolFromServer()
+    local invService = Rep:WaitForChild("KnitPackages")
+        :WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0")
+        :WaitForChild("knit"):WaitForChild("Services")
+        :WaitForChild("InventoryService"):WaitForChild("RE")
+        :WaitForChild("updateInventory")
+    invService:FireServer("eue", toolName)
+end
+
+local function CheckAndEquipAxe()
+    local char = player.Character
+    local backpack = player:FindFirstChild("Backpack")
+    local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+    if not (char and humanoid and backpack) then return end
+
+    local currentTool = char:FindFirstChildOfClass("Tool")
+    local axeInBackpack = backpack:FindFirstChild(toolName)
+
+    if (not currentTool or currentTool.Name ~= toolName) and not axeInBackpack then
+        RequestToolFromServer()
+        task.wait(0.5)
+        axeInBackpack = backpack:FindFirstChild(toolName)
+
+        if not axeInBackpack then
+            PurchaseAxe()
+            axeInBackpack = backpack:FindFirstChild(toolName)
+        end
+    end
+
+    if axeInBackpack then
+        humanoid:EquipTool(axeInBackpack)
+    end
+end
+
+local function StartAutoEquipLoop()
+    if runningAxeLoop then return end
+    runningAxeLoop = true
+    task.spawn(function()
+        while _G.AutoEquipAxe do
+            CheckAndEquipAxe()
+            task.wait(0.1)
+        end
+        runningAxeLoop = false
+    end)
+end
+
+-- 🔘 Toggle Auto Equip Axe
+local ToggleAxe = Tabs.FarmWood:AddToggle("AutoEquipAxe", {
+    Title = "Auto Lấy Rìu",
+    Default = false,
+    Callback = function(state)
+        _G.AutoEquipAxe = state
+        if state then StartAutoEquipLoop() end
+    end
+})
+player.CharacterAdded:Connect(function()
+    if _G.AutoEquipAxe then
+        task.wait(0.1)
+        StartAutoEquipLoop()
+    end
+end)
+
+--------------------------------------------------------------------------------
+-- 🎯 AUTO ARROW MINIGAME
+local rotationToKey = {
+    [0] = Enum.KeyCode.Right,
+    [90] = Enum.KeyCode.Down,
+    [180] = Enum.KeyCode.Left,
+    [270] = Enum.KeyCode.Up,
+}
+local function normalizeRotation(rot)
+    return (math.floor((rot % 360) / 90 + 0.5) * 90) % 360
+end
+
+local function doArrowSequence()
+    local gui = player:WaitForChild("PlayerGui")
+    local arrowGui = gui:WaitForChild("ArrowMinigame")
+    local listFrame = arrowGui:WaitForChild("Arrow"):WaitForChild("List")
+
+    for i = 1, 5 do
+        local frame = listFrame:FindFirstChild(tostring(i))
+        local img = frame and frame:FindFirstChild("ImageLabel")
+        if img then
+            local rot = normalizeRotation(img.Rotation)
+            local key = rotationToKey[rot]
+            if key then
+                VIM:SendKeyEvent(true, key, false, game)
+                task.wait(0.05)
+                VIM:SendKeyEvent(false, key, false, game)
+                task.wait(0.1)
+            end
+        end
+    end
+
+    task.wait(3)
+    VIM:SendKeyEvent(true, Enum.KeyCode.Space, false, game)
+    task.wait(0.05)
+    VIM:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+end
+
+local function setupArrowWatcher()
+    if runningArrow then return end
+    runningArrow = true
+    local gui = player:WaitForChild("PlayerGui")
+    local arrowGui = gui:WaitForChild("ArrowMinigame")
+
+    if arrowGui.Enabled then doArrowSequence() end
+    arrowWatcherConn = arrowGui:GetPropertyChangedSignal("Enabled"):Connect(function()
+        if _G.AutoArrowMinigame and arrowGui.Enabled then
+            doArrowSequence()
+        end
+    end)
+end
+
+local function disconnectArrowWatcher()
+    if arrowWatcherConn then
+        arrowWatcherConn:Disconnect()
+        arrowWatcherConn = nil
+    end
+    runningArrow = false
+end
+
+-- 🔘 Toggle Arrow
+Tabs.FarmWood:AddToggle("AutoArrowMinigame", {
+    Title = "🎯 Auto bấm nút ",
+    Default = false,
+    Callback = function(state)
+        _G.AutoArrowMinigame = state
+        if state then setupArrowWatcher() else disconnectArrowWatcher() end
+    end
+})
+local PvPTab = MainWindow:AddTab({ Title = "PvP" })
+
+local spinning = false
+local spinSpeed = 5 -- Tốc độ mặc định
+
+-- 🎚 Tốc độ xoay
+PvPTab:AddSlider("SpinSpeedSlider", {
+	Title = "🌀 Tốc độ Spin",
+	Min = 1,
+	Max = 500,
+	Default = 5,
+	Rounding = 1,
+	Callback = function(val)
+		spinSpeed = val
+	end
+})
+
+-- 🔘 Toggle PvP Spin
+PvPTab:AddToggle("PvPSpinToggle", {
+	Title = "🌀 PvP Spin (Xoay liên tục)",
+	Default = false,
+	Callback = function(state)
+		spinning = state
+		local char = player.Character
+		if not char then return end
+
+		local humanoid = char:FindFirstChildOfClass("Humanoid")
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+
+		if not humanoid or not hrp then return end
+
+		if state then
+			humanoid.AutoRotate = false
+			task.spawn(function()
+				while spinning and humanoid and hrp do
+					hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(spinSpeed), 0)
+					task.wait(0.03)
+				end
+			end)
+		else
+			humanoid.AutoRotate = true
+		end
+	end
+})
+
+-- 🔁 Khi hồi sinh, tự bật lại spin nếu đang bật
+player.CharacterAdded:Connect(function(char)
+	if spinning then
+		task.wait(0.5)
+		local humanoid = char:WaitForChild("Humanoid", 5)
+		if humanoid then humanoid.AutoRotate = false end
+	end
+end)
+Tabs.FramNpc = MainWindow:AddTab({ Title = "FarmNPC" })
+-- Thêm toggle Fluent UI
+Tabs.FramNpc:AddToggle("FarmNPC", {
+    Title = "Bật Farm NPC",
+    Default = false,
+    Callback = function(state)
+        _G.FramNPC = state
+        if state then
+            task.spawn(function()
+                while _G.FramNPC do
+                    framLoop() -- gọi hàm farm gốc
+                    task.wait()
+                end
+            end)
+        end
+    end
+})
+
+-- Đây là hàm farm gốc bạn giữ nguyên y chang:
+function framLoop()
+    local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local PathfindingService = game:GetService("PathfindingService")
+
+local Player = Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local Humanoid = Character:WaitForChild("Humanoid")
+
+-- Biến toàn cục farm
+_G.FramNPC = false
+_G.Range = 10
+_G.Speed = 5
+
+local function getNearestCityNPC()
+    local nearest, distance = nil, math.huge
+    for _, npc in pairs(workspace:GetDescendants()) do
+        if npc:IsA("Model") and npc:FindFirstChild("HumanoidRootPart") and string.lower(npc.Name):find("citynpc") then
+            local dist = (npc.HumanoidRootPart.Position - HumanoidRootPart.Position).Magnitude
+            if dist < distance then
+                distance = dist
+                nearest = npc
+            end
+        end
+    end
+    return nearest
+end
+
+local function moveToTarget(target)
+    local path = PathfindingService:CreatePath()
+    path:ComputeAsync(HumanoidRootPart.Position, target.Position)
+    local points = path:GetWaypoints()
+
+    for _, point in ipairs(points) do
+        if (HumanoidRootPart.Position - target.Position).Magnitude <= _G.Range then return end
+        Humanoid:MoveTo(point.Position)
+        Humanoid.MoveToFinished:Wait()
+    end
+end
+
+local function startOrbiting(target)
+    local angle = 0
+    local radius = _G.Range or 10
+    local speed = _G.Speed or 2
+    local connection
+
+    connection = RunService.RenderStepped:Connect(function()
+        if not target or not target:FindFirstChild("HumanoidRootPart") then
+            connection:Disconnect()
+            return
+        end
+
+        angle = angle + speed * 0.03
+        local x = math.cos(angle) * radius
+        local z = math.sin(angle) * radius
+        local newPosition = target.HumanoidRootPart.Position + Vector3.new(x, 0, z)
+
+        TweenService:Create(
+            HumanoidRootPart,
+            TweenInfo.new(0.1, Enum.EasingStyle.Linear),
+            {CFrame = CFrame.new(newPosition, target.HumanoidRootPart.Position)}
+        ):Play()
+    end)
+
+    return connection
+end
+
+local function autoAttack()
+    local tool = Player.Character:FindFirstChildOfClass("Tool")
+    if tool and tool:FindFirstChild("Handle") then
+        pcall(function()
+            tool:Activate()
+        end)
+    end
+end
+
+local function framLoop()
+    while _G.FramNPC do
+        local target = getNearestCityNPC()
+        if target then
+            moveToTarget(target.HumanoidRootPart)
+            if (HumanoidRootPart.Position - target.HumanoidRootPart.Position).Magnitude <= _G.Range + 2 then
+                local orbit = startOrbiting(target)
+
+                while target and target:FindFirstChild("Humanoid") and target.Humanoid.Health > 0 and _G.FramNPC do
+                    autoAttack()
+                    wait(0.3)
+                end
+
+                if orbit then orbit:Disconnect() end
+            end
+        end
+        wait(0.2)
+    end
+end
+
+function AutoPickupItems()
+    spawn(function()
+        while wait(1) do
+            if not _G.FramNPC then continue end
+            for _, item in pairs(workspace:GetChildren()) do
+                if item:IsA("Tool") or item.Name:lower():find("item") then
+                    if (item.Position - HumanoidRootPart.Position).Magnitude < 20 then
+                        firetouchinterest(item, HumanoidRootPart, 0)
+                        wait()
+                        firetouchinterest(item, HumanoidRootPart, 1)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+local function startFarm()
+    _G.FramNPC = true
+    task.spawn(framLoop)
+    AutoPickupItems()
+end
+
+local function stopFarm()
+    _G.FramNPC = false
+end
+
+-- GUI --
+
+local lp = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "FarmBossGUI"
+pcall(function()
+	gui.Parent = game:FindFirstChildOfClass("CoreGui")
+end)
+if not gui.Parent then
+	gui.Parent = lp:WaitForChild("PlayerGui")
+end
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 250, 0, 150)
+frame.Position = UDim2.new(0, 20, 0, 100)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BackgroundTransparency = 0.1
+frame.BorderSizePixel = 0
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Text = "💀RENX Fram Npc💀"
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.new(1,1,1)
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
+
+local toggle = Instance.new("TextButton", frame)
+toggle.Size = UDim2.new(0, 200, 0, 30)
+toggle.Position = UDim2.new(0, 25, 0, 40)
+toggle.Text = "Bật Farm Npc"
+toggle.BackgroundColor3 = Color3.fromRGB(60,60,60)
+toggle.TextColor3 = Color3.new(1,1,1)
+toggle.Font = Enum.Font.Gotham
+toggle.TextScaled = true
+Instance.new("UICorner", toggle)
+
+local distanceBox = Instance.new("TextBox", frame)
+distanceBox.Size = UDim2.new(0, 200, 0, 25)
+distanceBox.Position = UDim2.new(0, 25, 0, 80)
+distanceBox.PlaceholderText = "Khoảng cách (VD: 12)"
+distanceBox.Text = tostring(_G.Range)
+distanceBox.ClearTextOnFocus = false
+distanceBox.BackgroundColor3 = Color3.fromRGB(45,45,45)
+distanceBox.TextColor3 = Color3.new(1,1,1)
+distanceBox.Font = Enum.Font.Gotham
+distanceBox.TextScaled = true
+Instance.new("UICorner", distanceBox)
+
+local speedBox = Instance.new("TextBox", frame)
+speedBox.Size = UDim2.new(0, 200, 0, 25)
+speedBox.Position = UDim2.new(0, 25, 0, 110)
+speedBox.PlaceholderText = "Tốc độ vòng (VD: 1)"
+speedBox.Text = tostring(_G.Speed)
+speedBox.ClearTextOnFocus = false
+speedBox.BackgroundColor3 = Color3.fromRGB(45,45,45)
+speedBox.TextColor3 = Color3.new(1,1,1)
+speedBox.Font = Enum.Font.Gotham
+speedBox.TextScaled = true
+Instance.new("UICorner", speedBox)
+
+local isFarming = false
+
+toggle.MouseButton1Click:Connect(function()
+    if not isFarming then
+        local distanceVal = tonumber(distanceBox.Text)
+        if distanceVal and distanceVal >= 5 and distanceVal <= 30 then
+            _G.Range = distanceVal
+        else
+            _G.Range = 10
+            distanceBox.Text = tostring(_G.Range)
+        end
+
+        local speedVal = tonumber(speedBox.Text)
+        if speedVal and speedVal >= 1 and speedVal <= 20 then
+            _G.Speed = speedVal
+        else
+            _G.Speed = 5
+            speedBox.Text = tostring(_G.Speed)
+        end
+
+        isFarming = true
+        toggle.Text = "Tắt Farm NPC"
+        startFarm()
+    else
+        isFarming = false
+        toggle.Text = "Bật Farm NPC"
+        stopFarm()
+    end
+end)
+
+-- Cập nhật ngay khi người dùng rời textbox (FocusLost)
+distanceBox.FocusLost:Connect(function()
+    local val = tonumber(distanceBox.Text)
+    if val and val >= 5 and val <= 30 then
+        _G.Range = val
+    else
+        distanceBox.Text = tostring(_G.Range)
+    end
+end)
+
+speedBox.FocusLost:Connect(function()
+    local val = tonumber(speedBox.Text)
+    if val and val >= 1 and val <= 20 then
+        _G.Speed = val
+    else
+        speedBox.Text = tostring(_G.Speed)
+    end
+end)
+end
+	]])()
+end
+-- Bắt sự kiện khi bấm nút
+button.MouseButton1Click:Connect(function()
+	local key = textbox.Text
+	if isValidKey(key) then
+		notify("✅ Thành công", "Key hợp lệ! Đang chạy script...", 4)
+		gui:Destroy()
+		loadFarmBoss()
+	else
+		notify("❌ Sai key", "Key không đúng hoặc hết hạn", 4)
+	end
+end)
