@@ -1303,14 +1303,3 @@ end)
 end
 	]])()
 end
--- Bắt sự kiện khi bấm nút
-button.MouseButton1Click:Connect(function()
-	local key = textbox.Text
-	if isValidKey(key) then
-		notify("✅ Thành công", "Key hợp lệ! Đang chạy script...", 4)
-		gui:Destroy()
-		loadFarmBoss()
-	else
-		notify("❌ Sai key", "Key không đúng hoặc hết hạn", 4)
-	end
-end)
